@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJAY MOTO CRM V6</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#EEF3F8;
+}
+
+header{
+background:#1565C0;
+color:white;
+padding:15px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.container{
+padding:15px;
+}
+
+.card{
+background:#fff;
+padding:16px;
+border-radius:16px;
+box-shadow:0 4px 12px rgba(0,0,0,.12);
+margin-bottom:15px;
+border-left:5px solid #1565C0;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-2px);
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:8px;
+transition:.3s;
+font-size:16px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+background:#1565C0;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+font-weight:bold;
+letter-spacing:.5px;
+cursor:pointer;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header style="background:linear-gradient(135deg,#1565C0,#0D47A1);padding:18px;text-align:center;color:white;">
+<h2>🏍 AJAY MOTO CRM</h2>
+<p>Dealer Management System V2.0</p>
+</header>
+<div class="container">
+<div class="card">
+
+<button onclick="printReport()">
+🖨️ Print Report
+</button>
+<button onclick="downloadPDF()">
+📄 Download PDF Report
+</button>
+<button onclick="backupData()">
+💾 Backup Data
+</button>
+
+
+</div>
+
+<div class="card">
+<h3>Customer List</h3>
+<div class="card">
+
+<h3>⚙️ Settings</h3>
+
+<p style="margin-top:15px;">
+📱 AJAY MOTO CRM V1.0
+</p>
+
+<p>
+👨‍💻 Developer : Ajay Yadav
+</p>
+
+</div>
+
+<div id="customerList">
+No Customer Found
+</div>
+
+</div>
+<div class="card">
+
+<h3>Dashboard</h3>
+<div style="margin:15px 0;padding:12px;background:#1565C0;color:#fff;border-radius:12px;text-align:center;">
+<h2>📊 AJAY MOTO CRM Dashboard</h2>
+<p>Today's Sales • Finance • Reports</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+
+<div style="background:#E3F2FD;padding:12px;border-radius:10px;text-align:center;">
+<b>🏍 Today's Sales</b><br>
+<span id="todaySales">0</span>
+</div>
+
+<div style="background:#E8F5E9;padding:12px;border-radius:10px;text-align:center;">
+<b>💰 Total Sales</b><br>
+₹<span id="totalSales">0</span>
+</div>
+
+<div style="background:#FFF3E0;padding:12px;border-radius:10px;text-align:center;">
+<b>🏦 Finance Cases</b><br>
+<span id="financeCases">0</span>
+</div>
+
+<div style="background:#FCE4EC;padding:12px;border-radius:10px;text-align:center;">
+<b>💵 Cash Sales</b><br>
+₹<span id="cashSales">0</span>
+</div>
+
+</div>
+<p><b>Total Customers :</b>
+<span id="totalCustomer">0</span>
+</p>
+<p><b>📅 Today's Date :</b>
+<span id="todayDate"></span>
+</p>
+
+<p><b>📈 Today's Delivery :</b>
+<span id="todayDelivery">0</span>
+</p>
+<p><b>💰 Today's Income :</b>
+₹<span id="todayIncome">0</span>
+</p>
+<p><b>📆 Monthly Sales :</b>
+<span id="monthlySales">0</span>
+</p>
+
+<p><b>💰 Monthly Finance :</b>
+₹<span id="monthlyFinance">0</span>
+</p>
+<p><b>📈 Monthly Income :</b>
+₹<span id="monthlyIncome">0</span></p>
+<p><b>🏦 TVS Credit :</b>
+<span id="tvsCount">0</span></p>
+
+<p><b>🏦 L&T Finance :</b>
+<span id="ltCount">0</span></p>
+
+<p><b>🏦 IDFC :</b>
+<span id="idfcCount">0</span></p>
+
+<p><b>💵 Cash Purchase :</b>
+<span id="cashCount">0</span></p>
+<hr style="margin:15px 0;">
+
+<h3>📋 Customer Summary</h3>
+<h3 style="margin-top:20px;">🏢 Dealer Wise Report</h3>
+
+<div id="dealerReport"
+style="background:#F5F5F5;
+padding:10px;
+border-radius:10px;
+margin-top:10px;">
+
+No Dealer Report
+
+</div>
+
+<p>👥 Total Customers : <span id="summaryCustomer">0</span></p>
+
+<p>💰 Total Sales : ₹<span id="summarySales">0</span></p>
+
+<p>🏦 Finance Cases : <span id="summaryFinance">0</span></p>
+
+<p>💵 Cash Cases : <span id="summaryCash">0</span></p>
+<p><b>🟡 Pending :</b>
+<span id="pendingCount">0</span></p>
+
+<p><b>🟢 Delivered :</b>
+<span id="deliveredCount">0</span></p>
+<p><b>Total Finance Amount :</b>
+₹<span id="financeAmount">0</span></p>
+
+<p><b>Total Cash Sale :</b>
+₹<span id="cashAmount">0</span></p>
+<p><b>💵 Total Down Payment :</b>
+₹<span id="downAmount">0</span></p>
+<div class="card">
+
+<div style="display:flex;gap:8px;margin-top:10px;">
+<input
+type="text"
+id="search"
+placeholder="🔍 Search Customer"
+style="flex:1;">
+
+<button
+type="button"
+onclick="searchCustomer()"
+style="width:120px;margin-top:0;">
+🔍 Search
+</button>
+</div>
+<select id="filterStatus">
+
+<option value="All">📋 All Customers</option>
+
+<option value="Pending">🟡 Pending</option>
+
+<option value="Delivered">🟢 Delivered</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Add New Customer</h3>
+<h4 style="color:#1565C0; margin-top:10px;">🏢 Dealer Information</h4>
+
+<input type="text"
+id="dealer"
+placeholder="Dealer Name"
+style="border:2px solid #1565C0; font-weight:bold; background:#E3F2FD;">
+<input type="text" id="lan" placeholder="LAN Number"
+style="background:#E8F5E9;font-weight:bold;">
+
+<input type="date" id="saleDate">
+
+<input type="text" id="name" placeholder="Customer Name">
+<input type="text" id="father" placeholder="Father Name">
+
+<input type="text" id="village" placeholder="Village / Address">
+
+<input type="text" id="mobile" placeholder="Mobile Number">
+
+
+<input type="text" id="mobile2" placeholder="Customer Mobile Number 2">
+
+<input type="text" id="mobile3" placeholder="Customer Mobile Number 3">
+<input type="text" id="bike" placeholder="Bike Model">
+<input type="text" id="colour" placeholder="Bike Colour">
+
+<input type="text" id="sales" placeholder="Sales Executive">
+
+<input type="number" id="price" placeholder="On Road Price">
+<input type="number" id="down" placeholder="Down Payment">
+
+<input type="number" id="loan" placeholder="Loan Amount">
+
+<input type="number" id="emi" placeholder="EMI Amount">
+
+<input type="number" id="month" placeholder="EMI Months">
+
+<select id="status">
+    <option value="Pending">🟡 Pending</option>
+    <option value="Delivered">🟢 Delivered</option>
+</select>
+
+<select id="finance">
+    <option value="">Select Finance Company</option>
+    <option>TVS Credit</option>
+    <option>L&T Finance</option>
+    <option>IDFC First Bank</option>
+    <option>HDB Finance</option>
+    <option>Bajaj Finance</option>
+    <option>Cash Purchase</option>
+</select>
+
+<button id="saveBtn">
+💾 Save Customer
+</button>
+
+</div>
+
+</div>
+<div class="card">
+<h3>Customer List</h3>
+<div id="customerList">
+No Customer Found
+</div>
+</div>
+
+<script>
+
+let customers = JSON.parse(localStorage.getItem("customers")) || [];
+let editIndex = -1;
+document.getElementById("lan").value = "";
+
+document.getElementById("saleDate").value =
+new Date().toISOString().split("T")[0];
+
+function showCustomers(){
+  let totalSales = 0;
+  let totalFinance = 0;
+
+let totalCash = 0;
+let totalDown = 0;
+
+let financeCases = 0;
+let pendingCount = 0;
+
+let deliveredCount = 0;
+let todayDelivery = 0;
+let todayIncome = 0;
+let monthlySales = 0;
+
+let monthlyFinance = 0;
+let monthlyIncome = 0;
+let tvsCount = 0;
+let ltCount = 0;
+let idfcCount = 0;
+let cashCount = 0;
+
+let cashSales = 0;
+
+let todaySales = customers.length;
+let dealerSummary = {};
+let html="";
+
+if(customers.length==0){
+
+document.getElementById("customerList").innerHTML="No Customer Found";
+return;
+
+}
+let filter = document.getElementById("filterStatus").value;
+customers.forEach((c,i)=>{
+    if(!dealerSummary[c.dealer]){
+dealerSummary[c.dealer]={
+customer:0,
+sales:0,
+finance:0,
+cash:0
+};
+}
+
+dealerSummary[c.dealer].customer++;
+
+dealerSummary[c.dealer].sales += Number(c.price || 0);
+
+if(c.finance=="Cash Purchase"){
+dealerSummary[c.dealer].cash += Number(c.price || 0);
+}else{
+dealerSummary[c.dealer].finance += Number(c.loan || 0);
+}
+  let currentMonth = new Date().toISOString().slice(0,7);
+
+if(c.saleDate && c.saleDate.startsWith(currentMonth)){
+
+    monthlySales++;
+
+    monthlyFinance += Number(c.loan || 0);
+
+    monthlyIncome += Number(c.price || 0);
+
+}
+  if(filter!="All" && c.status!=filter){
+return;
+}
+  totalSales += Number(c.price || 0);
+  totalDown += Number(c.down || 0);
+  if(c.finance=="TVS Credit") tvsCount++;
+
+if(c.finance=="L&T Finance") ltCount++;
+
+if(c.finance=="IDFC First Bank") idfcCount++;
+
+if(c.finance=="Cash Purchase") cashCount++;
+  if(c.status=="Pending"){
+    pendingCount++;
+}
+
+if(c.status=="Delivered"){
+    deliveredCount++;
+}
+if(c.status=="Delivered" &&
+c.saleDate==new Date().toISOString().split("T")[0]){
+    todayDelivery++;
+    todayIncome += Number(c.price || 0);
+}
+}
+  if(c.finance && c.finance != "Cash Purchase"){
+    totalFinance += Number(c.loan || 0);
+}else{
+    totalCash += Number(c.price || 0);
+}
+
+if(c.finance && c.finance != "Cash Purchase"){
+    financeCases++;
+}else{
+    cashSales += Number(c.price || 0);
+}
+
+html+=`
+<div style="border:1px solid #ddd;padding:10px;border-radius:8px;margin:10px 0;">
+<b>📄 S.No. ${i+1}</b><br>
+🆔 Customer ID : <b>${c.customerId}</b><br>
+🏦 LAN : <b>${c.lan || "-"}</b><br>
+
+🏢 Dealer : ${c.dealer}<br>
+
+📅 Sale Date : ${c.saleDate}<br><br>
+🕒 Saved : ${c.saveTime || "-"}<br><br>
+
+👤 <b>${c.name}</b><br>
+
+📞 Mobile 1 : ${c.mobile}<br>
+
+📞 Mobile 2 : ${c.mobile2 || "-"}<br>
+
+📞 Mobile 3 : ${c.mobile3 || "-"}<br>
+
+🏍 Bike : ${c.bike}<br>
+🎨 Colour : ${c.colour || "-"}<br>
+
+👨‍💼 Sales Executive : ${c.sales || "-"}<br>
+
+💰 On Road : ₹${c.price}<br>
+💳 Finance : ${c.finance || "-"}<br>
+📌 Status : <b>${c.status || "Pending"}</b><br>
+
+💵 EMI : ₹${c.emi} × ${c.month} Months<br><br>
+<button onclick="viewCustomer(${i})">
+👁️ View
+</button>
+<button onclick="callCustomer('${c.mobile}')">
+📞 Call
+</button>
+
+<button onclick="whatsappCustomer('${c.mobile}')">
+💬 WhatsApp
+</button>
+
+<button onclick="editCustomer(${i})">
+✏️ Edit
+</button>
+
+<button onclick="deleteCustomer(${i})">
+🗑 Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("customerList").innerHTML=html;
+document.getElementById("totalCustomer").innerHTML = customers.length;
+document.getElementById("todaySales").innerHTML = todaySales;
+
+document.getElementById("totalSales").innerHTML = totalSales.toLocaleString();
+
+document.getElementById("financeCases").innerHTML = financeCases;
+
+document.getElementById("cashSales").innerHTML = cashSales.toLocaleString();
+document.getElementById("pendingCount").innerHTML =
+pendingCount;
+
+document.getElementById("deliveredCount").innerHTML =
+deliveredCount;
+document.getElementById("todayDelivery").innerHTML =
+todayDelivery;
+document.getElementById("todayIncome").innerHTML =
+todayIncome.toLocaleString();
+
+document.getElementById("todayDate").innerHTML =
+new Date().toLocaleDateString();
+document.getElementById("monthlySales").innerHTML =
+monthlySales;
+
+document.getElementById("monthlyFinance").innerHTML =
+monthlyFinance.toLocaleString();
+document.getElementById("monthlyIncome").innerHTML =
+monthlyIncome.toLocaleString();
+document.getElementById("financeAmount").innerHTML =
+totalFinance.toLocaleString();
+
+document.getElementById("cashAmount").innerHTML =
+totalCash.toLocaleString();
+document.getElementById("downAmount").innerHTML =
+totalDown.toLocaleString();
+document.getElementById("tvsCount").innerHTML = tvsCount;
+
+document.getElementById("ltCount").innerHTML = ltCount;
+
+document.getElementById("idfcCount").innerHTML = idfcCount;
+
+document.getElementById("cashCount").innerHTML = cashCount;
+document.getElementById("summaryCustomer").innerHTML = customers.length;
+
+document.getElementById("summarySales").innerHTML = totalSales.toLocaleString();
+
+document.getElementById("summaryFinance").innerHTML = financeCases;
+
+document.getElementById("summaryCash").innerHTML = cashCount;
+let dealerHTML="";
+
+for(let dealer in dealerSummary){
+
+dealerHTML += `
+<div style="border:1px solid #ddd;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+background:#fff;">
+
+<b>🏢 ${dealer}</b><br>
+
+👥 Customers : ${dealerSummary[dealer].customer}<br>
+
+💰 Sales : ₹${dealerSummary[dealer].sales.toLocaleString()}<br>
+
+🏦 Finance : ₹${dealerSummary[dealer].finance.toLocaleString()}<br>
+
+💵 Cash : ₹${dealerSummary[dealer].cash.toLocaleString()}
+
+</div>
+`;
+
+}
+
+document.getElementById("dealerReport").innerHTML =
+dealerHTML || "No Dealer Report";
+
+}
+
+document.getElementById("saveBtn").onclick=function(){
+
+let name=document.getElementById("name").value;
+let father=document.getElementById("father").value;
+
+let village=document.getElementById("village").value;
+
+let mobile=document.getElementById("mobile").value;
+
+let bike=document.getElementById("bike").value;
+let colour = document.getElementById("colour").value;
+
+let sales = document.getElementById("sales").value;
+
+let price=document.getElementById("price").value;
+let mobile2 = document.getElementById("mobile2").value;
+
+let mobile3 = document.getElementById("mobile3").value;
+
+let down = document.getElementById("down").value;
+
+let loan = document.getElementById("loan").value;
+
+let emi = document.getElementById("emi").value;
+
+let month = document.getElementById("month").value;
+
+let finance = document.getElementById("finance").value;
+let status = document.getElementById("status").value;
+let dealer=document.getElementById("dealer").value;
+
+let lan=document.getElementById("lan").value;
+
+let saleDate=document.getElementById("saleDate").value;
+
+if(name==""||mobile==""){
+
+alert("Customer Name aur Mobile Number bhariye.");
+
+return;
+
+}
+let exists = customers.find(c => c.mobile === mobile);
+
+if(exists){
+
+alert("❌ Ye Mobile Number pehle se Save hai.");
+
+return;
+
+}
+let customerId = "AJM-" + String(customers.length + 1).padStart(4,"0");
+if(editIndex!=-1){
+
+customers[editIndex]={
+customerId: customers[editIndex].customerId,
+lan,
+saleDate,
+dealer,
+name,
+father,
+village,
+mobile,
+mobile2,
+mobile3,
+bike,
+colour,
+sales,
+price,
+down,
+loan,
+emi,
+month,
+finance,
+status
+};
+
+editIndex=-1;
+
+localStorage.setItem("customers",JSON.stringify(customers));
+
+showCustomers();
+
+alert("✅ Customer Updated Successfully");
+
+return;
+
+}
+customers.push({
+  customerId,
+  saveTime: new Date().toLocaleString(),
+  lan,
+  saleDate,
+  dealer,
+  name,
+father,
+village,
+mobile,
+mobile2,
+mobile3,
+bike,
+colour,
+sales,
+price,
+down,
+loan,
+emi,
+month,
+finance,
+status
+});
+localStorage.setItem("customers", JSON.stringify(customers));
+showCustomers();
+
+document.getElementById("dealer").value="";
+document.getElementById("lan").value="";
+document.getElementById("saleDate").value=new Date().toISOString().split("T")[0];
+
+document.getElementById("name").value="";
+document.getElementById("father").value="";
+document.getElementById("village").value="";
+document.getElementById("mobile").value="";
+document.getElementById("mobile2").value="";
+document.getElementById("mobile3").value="";
+document.getElementById("bike").value="";
+document.getElementById("colour").value="";
+document.getElementById("sales").value="";
+document.getElementById("price").value="";
+document.getElementById("down").value="";
+document.getElementById("loan").value="";
+document.getElementById("emi").value="";
+document.getElementById("month").value="";
+document.getElementById("finance").selectedIndex=0;
+document.getElementById("status").selectedIndex=0;
+
+};
+function viewCustomer(index){
+
+let c = customers[index];
+editIndex = index;
+
+alert(
+"🆔 Customer ID : " + c.customerId +
+"\n" +
+"🏢 Dealer : " + c.dealer +
+"\n🏦 LAN : " + (c.lan || "-") +
+"\n📅 Date : " + c.saleDate +
+"\n🕒 Saved : " + (c.saveTime || "-") +
+"\n\n👤 Customer : " + c.name +
+"\n👨 Father : " + c.father +
+"\n🏠 Village : " + c.village +
+"\n\n📞 Mobile 1 : " + c.mobile +
+"\n📞 Mobile 2 : " + (c.mobile2 || "-") +
+"\n📞 Mobile 3 : " + (c.mobile3 || "-") +
+"\n\n🏍 Bike : " + c.bike +
+"\n🎨 Colour : " + (c.colour || "-") +
+"\n👨‍💼 Sales : " + (c.sales || "-") +
+"\n\n💰 Price : ₹" + c.price +
+"\n💵 Down : ₹" + c.down +
+"\n🏦 Loan : ₹" + c.loan +
+"\n💳 EMI : ₹" + c.emi +
+"\n📅 Months : " + c.month +
+"\n🏦 Finance : " + c.finance +
+"\n📌 Status : " + c.status
+);
+
+}
+function printReport(){
+
+let report = "";
+
+report += "AJAY MOTO CRM REPORT\n\n";
+
+report += "Total Customers : " + customers.length + "\n\n";
+
+customers.forEach((c,index)=>{
+
+report +=
+(index+1)+". "+c.name+
+"\nDealer : "+c.dealer+
+"\nLAN : "+(c.lan||"-")+
+"\nBike : "+c.bike+
+"\nFinance : "+c.finance+
+"\nStatus : "+c.status+
+"\nMobile : "+c.mobile+
+"\n-------------------------\n";
+
+});
+
+let w = window.open("");
+
+w.document.write("<pre>"+report+"</pre>");
+
+w.print();
+
+}
+
+
+
+
+function callCustomer(number){
+
+
+window.location.href = "tel:" + number;
+
+}
+
+function whatsappCustomer(number){
+
+window.open("https://wa.me/91"+number);
+
+}
+function editCustomer(index){
+
+let c = customers[index];
+
+document.getElementById("dealer").value = c.dealer || "";
+document.getElementById("lan").value = c.lan || "";
+document.getElementById("saleDate").value = c.saleDate || "";
+
+document.getElementById("name").value = c.name || "";
+document.getElementById("father").value = c.father || "";
+document.getElementById("village").value = c.village || "";
+
+document.getElementById("mobile").value = c.mobile || "";
+document.getElementById("mobile2").value = c.mobile2 || "";
+document.getElementById("mobile3").value = c.mobile3 || "";
+
+document.getElementById("bike").value = c.bike || "";
+document.getElementById("colour").value = c.colour || "";
+document.getElementById("sales").value = c.sales || "";
+
+document.getElementById("price").value = c.price || "";
+document.getElementById("down").value = c.down || "";
+document.getElementById("loan").value = c.loan || "";
+document.getElementById("emi").value = c.emi || "";
+document.getElementById("month").value = c.month || "";
+
+document.getElementById("finance").value = c.finance || "";
+document.getElementById("status").value = c.status || "Pending";
+
+
+}
+function deleteCustomer(index){
+
+if(confirm("⚠️ Kya aap is customer ko delete karna chahte hain?")){
+
+customers.splice(index,1);
+
+localStorage.setItem("customers", JSON.stringify(customers));
+
+showCustomers();
+
+alert("✅ Customer Deleted Successfully");
+
+}
+
+}
+
+function searchCustomer(){
+
+let value = document.getElementById("search").value.toLowerCase();
+
+let cards = document.querySelectorAll("#customerList div");
+
+cards.forEach(card=>{
+
+card.style.display =
+card.innerText.toLowerCase().includes(value)
+? "block"
+: "none";
+
+});
+
+}
+
+document.getElementById("search").onkeyup=function(){
+
+searchCustomer();
+
+};
+
+document.getElementById("filterStatus").onchange=function(){
+
+showCustomers();
+
+};
+
+showCustomers();
+async function downloadPDF(){
+
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+doc.setFontSize(18);
+doc.text("AJAY MOTO CRM REPORT",20,20);
+
+doc.setFontSize(12);
+
+let y = 35;
+
+doc.text("Total Customers : " + customers.length,20,y);
+
+y += 10;
+
+customers.forEach((c,i)=>{
+
+doc.text(
+(i+1)+". "+c.name+
+" | "+c.mobile+
+" | "+c.bike,
+20,
+y
+);
+
+y += 8;
+
+if(y>280){
+
+doc.addPage();
+
+y=20;
+
+}
+
+});
+
+doc.save("AJAY_MOTO_CRM_Report.pdf");
+
+}
+async function backupData(){
+
+let data = JSON.stringify(customers,null,2);
+
+let blob = new Blob([data],{type:"application/json"});
+
+let file = new File([blob],"AJAY_MOTO_CRM_Backup.json",{
+type:"application/json"
+});
+
+if(navigator.share){
+
+try{
+
+await navigator.share({
+title:"AJAY MOTO CRM Backup",
+text:"AJAY MOTO CRM Backup File",
+files:[file]
+});
+
+}catch(e){}
+
+}else{
+
+let a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="AJAY_MOTO_CRM_Backup.json";
+
+a.click();
+
+}
+
+}
+</script>
+
+</body>
+  </html>
+  
